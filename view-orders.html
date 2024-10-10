@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+    <title>View Orders</title>
+</head>
+<body>
+       
+
+    <div id="view-order" class="container">
+        <h2>Your Orders</h2>
+        <div id="user-order-list">
+            <!-- User order listing will go here -->
+        </div>
+    </div>
+
+    <script  type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
+        
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyA9isF_GvCXg91fFWEcm9AaH-GawrkKKU4",
+            authDomain: "catering-9496e.firebaseapp.com",
+            databaseURL: "https://catering-9496e-default-rtdb.firebaseio.com",
+            projectId: "catering-9496e",
+            storageBucket: "catering-9496e.appspot.com",
+            messagingSenderId: "982629801002",
+            appId: "1:982629801002:web:93117f2bf175443c75f753"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        
+        // Upload product functionality
+        document.getElementById("upload-product-form")?.addEventListener("submit", function(e) {
+            e.preventDefault();
+        
+            const productName = document.getElementById("product-name").value;
+            const productDescription = document.getElementById("product-description").value;
+            const productPrice = document.getElementById("product-price").value;
+        
+            const productId = Date.now(); // Using timestamp as a unique ID
+        
+            set(ref(db, 'products/' + productId), {
+                name: productName,
+                description: productDescription,
+                price: productPrice
+            }).then(() => {
+                alert("Product uploaded successfully!");
+                document.getElementById("upload-product-form").reset();
+                
+                // Create an order for the uploaded product
+                createOrder(productName, productPrice, productDescription);
+            }).catch((error) => {
+                console.error("Error uploading product: ", error);
+            });
+        });
+        
+        // Function to create an order
+        function createOrder(productName, price, description) {
+            const orderId = Date.now(); // Unique order ID
+            set(ref(db, 'orders/' + orderId), {
+                productName: productName,
+                price: price,
+                description: description
+            }).then(() => {
+                console.log("Order created successfully!");
+            }).catch((error) => {
+                console.error("Error creating order: ", error);
+            });
+        }
+        
+        // Fetch orders function
+        function fetchOrders() {
+            get(child(ref(db), 'orders/')).then((snapshot) => {
+                const orderList = document.getElementById("user-order-list");
+                orderList.innerHTML = ""; // Clear existing orders
+        
+                if (snapshot.exists()) {
+                    snapshot.forEach(order => {
+                        const orderData = order.val();
+                        const orderItem = document.createElement("div");
+                        orderItem.innerHTML = `
+                            <p><strong>Order ID:</strong> ${order.key}</p>
+                            <p><strong>Product Name:</strong> ${orderData.productName}</p>
+                            <p><strong>Price:</strong> $${orderData.price}</p>
+                            <p><strong>Description:</strong> ${orderData.description}</p>
+                            <hr>
+                        `;
+                        orderList.appendChild(orderItem);
+                    });
+                } else {
+                    orderList.innerHTML = "<p>No orders found.</p>";
+                }
+            }).catch((error) => {
+                console.error("Error fetching orders: ", error);
+            });
+        }
+        
+        // Call fetchOrders when the page loads (for view-order.html)
+        if (document.getElementById("user-order-list")) {
+            fetchOrders();
+        }
+        </script>
+</body>
+</html>

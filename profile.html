@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>User Profile</title>
+    <link rel="stylesheet" href="style1.css">
+</head>
+<body>
+    <div class="box">
+        <div class="form">
+            <h2>User Profile</h2>
+            <div id="profileInfo">
+                <p>Loading...</p>
+            </div>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+        import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA9isF_GvCXg91fFWEcm9AaH-GawrkKKU4",
+            authDomain: "catering-9496e.firebaseapp.com",
+            databaseURL: "https://catering-9496e-default-rtdb.firebaseio.com",
+            projectId: "catering-9496e",
+            storageBucket: "catering-9496e.appspot.com",
+            messagingSenderId: "982629801002",
+            appId: "1:982629801002:web:93117f2bf175443c75f753"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Get username from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('username');
+
+        // Fetch user data
+        get(child(ref(db), 'users/' + username)).then((snapshot) => {
+            if (snapshot.exists()) {
+                const userData = snapshot.val();
+                document.getElementById("profileInfo").innerHTML = `
+                    <p><strong>Username:</strong> ${userData.username}</p>
+                    <p><strong>Email:</strong> ${userData.email}</p>
+                    <p><strong>Phone Number:</strong> ${userData.phoneNumber}</p>
+                `;
+            } else {
+                document.getElementById("profileInfo").innerHTML = "<p>No user data found.</p>";
+            }
+        }).catch((error) => {
+            console.error(error);
+            document.getElementById("profileInfo").innerHTML = "<p>Error loading profile.</p>";
+        });
+
+        function logout() {
+            // Redirect to the registration page
+            window.location.href = 'register.html';
+        }
+    </script>
+</body>
+</html>
+
+

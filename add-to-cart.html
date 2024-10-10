@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Orders</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="column">
+    <h1>Place Your Order</h1>
+
+    <!-- Form to input product details -->
+    <div class="order-form">
+        <label for="product-name">Product Name:</label>
+        <input type="text" id="product-name" placeholder="Enter product name"><br><br>
+
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" placeholder="Enter quantity"><br><br>
+
+        <label for="price">Price:</label>
+        <input type="number" id="price" placeholder="Enter price"><br><br>
+
+        <button onclick="addOrder()">Add to Orders</button>
+        <button onclick="goToMyOrders()"><a href="my-orders.html">View My Orders</a></button>
+    </div>
+
+    <script>
+        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+        function addOrder() {
+            const productName = document.getElementById('product-name').value;
+            const quantity = document.getElementById('quantity').value;
+            const price = document.getElementById('price').value;
+
+            if (productName === '' || quantity === '' || price === '') {
+                alert('Please fill out all fields');
+                return;
+            }
+
+            const newOrder = {
+                orderId: new Date().getTime(),
+                product: productName,
+                quantity: quantity,
+                price:` $${price}`,
+                status: 'Pending',
+                date: new Date().toLocaleDateString()
+            };
+
+            orders.push(newOrder);
+            localStorage.setItem('orders', JSON.stringify(orders));
+
+            alert('Order added!');
+            document.getElementById('product-name').value = '';
+            document.getElementById('quantity').value = '';
+            document.getElementById('price').value = '';
+        }
+
+        function goToMyOrders() {
+            window.location.href = 'my_orders.html';
+        }
+    </script>
+    </div>
+</body>
+</html>

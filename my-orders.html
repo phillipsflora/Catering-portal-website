@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders</title>
+    <style>body{
+      background-image: url('122.jpeg');
+      background-size: cover;
+      background-repeat: no-repeat;
+    }</style>
+</head>
+<body>
+    <h1>My Orders</h1>
+    <div id="orders-container"></div>
+
+    <button onclick="goBack()">Go Back</button>
+
+    <script>
+        function displayOrders() {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const ordersContainer = document.getElementById('orders-container');
+            ordersContainer.innerHTML = ''; // Clear any previous content
+
+            if (orders.length === 0) {
+                ordersContainer.innerHTML = '<p>No orders yet.</p>';
+                return;
+            }
+
+            orders.forEach(order => {
+                const orderItem = document.createElement('div');
+                orderItem.className = 'order-item';
+                orderItem.innerHTML = `
+                    <p><strong>Order ID:</strong> ${order.orderId}</p>
+                    <p><strong>Product:</strong> ${order.product}</p>
+                    <p><strong>Quantity:</strong> ${order.quantity}</p>
+                    <p><strong>Price:</strong> ${order.price}</p>
+                    <p><strong>Status:</strong> ${order.status}</p>
+                    <p><strong>Order Date:</strong> ${order.date}</p>
+                `;
+                ordersContainer.appendChild(orderItem);
+            });
+        }
+
+        function goBack() {
+            window.location.href = 'add-to-cart.html';
+        }
+
+        // Call displayOrders when page loads
+        displayOrders();
+    </script>
+</body>
+</html>

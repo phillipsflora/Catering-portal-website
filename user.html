@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>User Portal</title>
+</head>
+<body>
+    <div class="navbar">
+        <h2>User Panel</h2>
+        <ul>
+            <li><a href="register.html">Register </a></li>
+            <li><a href="login.html">Login </a></li>
+            <li><a href="upload-product.html">Upload Product</a></li>
+        </ul>
+    </div>
+    
+        </div>
+        <div id="upload-product" class="container">
+            <h2>Upload Product</h2>
+            <form id="upload-product-form">
+                <input type="text" placeholder="Product Name" required>
+                <input type="text" placeholder="Product Description" required>
+                <input type="number" placeholder="Price" required>
+                <button type="submit">Upload</button>
+            </form>
+        </div>
+        <div id="view-order" class="container">
+            <h2>View Orders</h2>
+            <div id="user-order-list">
+                <!-- User order listing will go here -->
+            </div>
+        </div>
+    </div>
+    <script src="user.js"></script>
+</body>
+</html>
+

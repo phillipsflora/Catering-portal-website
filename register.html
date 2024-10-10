@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Firebase Form</title>
+    <link rel="stylesheet" href="style1.css">
+</head>
+<body>
+    <div class="box">
+        <div class="form">
+            <h2>Register Form</h2>
+            <form id="registerForm">
+                <div class="inputbox">
+                    <input type="text" id="username" required>
+                    <span>Username</span>
+                </div>
+                <div class="inputbox">
+                    <input type="email" id="email" required>
+                    <span>E-mail</span>
+                </div>
+                <div class="inputbox">
+                    <input type="text" id="phone" required>
+                    <span>Phone Number</span>
+                </div>
+                <input type="submit" value="Submit" class="sub" id="submit">
+            </form>
+        </div>
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA9isF_GvCXg91fFWEcm9AaH-GawrkKKU4",
+            authDomain: "catering-9496e.firebaseapp.com",
+            databaseURL: "https://catering-9496e-default-rtdb.firebaseio.com",
+            projectId: "catering-9496e",
+            storageBucket: "catering-9496e.appspot.com",
+            messagingSenderId: "982629801002",
+            appId: "1:982629801002:web:93117f2bf175443c75f753"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        document.getElementById("registerForm").addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById("username").value;
+
+            set(ref(db, 'users/' + username), {
+                username: username,
+                email: document.getElementById("email").value,
+                phoneNumber: document.getElementById("phone").value
+            }).then(() => {
+                alert("Registered Successfully!");
+                window.location.href = 'profile.html?username=' + username; // Redirect to profile page
+            });
+        });
+    </script>
+</body>
+</html>
